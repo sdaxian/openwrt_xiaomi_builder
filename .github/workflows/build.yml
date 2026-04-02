@@ -24,10 +24,18 @@ on:
         options:
         - true
         - false
+      single_build:
+        description: 'Single build (only spec target) '
+        required: false
+        default: 'false'
+        type: choice
+        options:
+        - true
+        - false
       target_name:
         description: 'Target Name for test build'
         required: false
-        default: 'r3d'
+        default: 'r3d_my'
         type: string
       package_dir:
         description: 'Package Dir for test build'
@@ -59,6 +67,7 @@ on:
 env:
   TEST_BUILD: ${{ github.event.inputs.test_build == 'true' }}
   TAG_SUFFIX: ${{ github.event.inputs.fake_build == 'true' && '-fake' || github.event.inputs.test_build == 'true' && '-test' || '' }}
+  SINGLE_BUILD: ${{ github.event.inputs.single_build == 'true' }}
   TARGET_NAME: ${{ github.event.inputs.target_name }}
   G_PKG_DIR: ${{ github.event.inputs.package_dir }}
   REPO_URL: https://github.com/openwrt-xiaomi/openwrt
@@ -86,6 +95,7 @@ jobs:
       fw_ver: ${{ steps.gh.outputs.fw_ver }}
       is_active: ${{ steps.activity.outputs.is_active }}
       test_build: ${{ env.TEST_BUILD }}
+      single_build: ${{ env.SINGLE_BUILD }}
       target_name: ${{ env.TARGET_NAME }}
       fake_build: ${{ env.FAKE_BUILD }}
     steps:
@@ -168,8 +178,9 @@ jobs:
           - tuf-ax4200q
           - tuf-ax6000
           - zen-bt8
+          - r3d_my
         isTest:
-          - ${{ needs.check.outputs.test_build == 'true' }}
+          - ${{ needs.check.outputs.test_build == 'true' || needs.check.outputs.single_build == 'true' }}
         exclude:
           - { isTest: true }
         include:
