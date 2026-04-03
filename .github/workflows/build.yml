@@ -616,7 +616,7 @@ jobs:
 
       - name: Mark firmware build failed, Debug
         uses: mxschmitt/action-tmate@v3
-        if: ${{ steps.compile.outputs.status != 'success' && env.DEBUG == 'true' }}
+        if: ${{ failure() && env.DEBUG == 'true' }}
 
       - name: Build the TRX image without WiFi activation
         id: compile_wifi_dis
