@@ -37,6 +37,14 @@ on:
         required: false
         default: 'r3d_my'
         type: string
+      debug:
+        description: 'build failed with ssh debug '
+        required: false
+        default: 'false'
+        type: choice
+        options:
+        - true
+        - false
       package_dir:
         description: 'Package Dir for test build'
         required: false
@@ -69,6 +77,7 @@ env:
   TAG_SUFFIX: ${{ github.event.inputs.fake_build == 'true' && '-fake' || github.event.inputs.test_build == 'true' && '-test' || '' }}
   SINGLE_BUILD: ${{ github.event.inputs.single_build == 'true' }}
   TARGET_NAME: ${{ github.event.inputs.target_name }}
+  DEBUG: ${{ github.event.inputs.debug }}
   G_PKG_DIR: ${{ github.event.inputs.package_dir }}
   REPO_URL: https://github.com/openwrt-xiaomi/openwrt
   REPO_LNK: openwrt-xiaomi/openwrt
@@ -97,6 +106,7 @@ jobs:
       test_build: ${{ env.TEST_BUILD }}
       single_build: ${{ env.SINGLE_BUILD }}
       target_name: ${{ env.TARGET_NAME }}
+      debug: ${{ env.DEBUG }}
       fake_build: ${{ env.FAKE_BUILD }}
     steps:
       - name: Get repo data via GH API
@@ -603,6 +613,10 @@ jobs:
           echo "BUILD FAILED" > $OUT_DIR/FAILED.txt
           echo "BLD_VER=$FW_VER" >> $GITHUB_ENV
           echo "OUT_DIR=$OUT_DIR" >> $GITHUB_ENV
+
+      - name: Mark firmware build failed, Debug
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ steps.compile.outputs.status != 'success' && env.DEBUG == 'true' }}
 
       - name: Build the TRX image without WiFi activation
         id: compile_wifi_dis
