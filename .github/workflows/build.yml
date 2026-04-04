@@ -532,6 +532,12 @@ jobs:
           echo "Available storage:"
           sudo df -h
 
+      - name: Use ccache
+        id: ccache
+        if: needs.check.outputs.debug == 'true'
+        run: |
+          echo "CONFIG_CCACHE=1" >> $GITHUB_ENV
+
       - name: Build the firmware image
         id: compile
         if: steps.tools.outputs.status == 'success'
