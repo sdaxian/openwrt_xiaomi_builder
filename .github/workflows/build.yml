@@ -579,6 +579,7 @@ jobs:
         env: 
           TARGET: ${{ matrix.target }}
           OUT_DIR: ./bin/targets/${{ env.G_BOARD_NAME }}/${{ env.G_SUBTARGET_NAME }}
+          PKG_OUT_DIR: ./bin/packages
         run: |
           if [ "$FAKE_BUILD" = true ]; then
               mkdir -p logs
@@ -619,6 +620,7 @@ jobs:
           echo "FW_BUILD_OK=1" >> $GITHUB_ENV
           echo "BLD_VER=$BLD_VER" >> $GITHUB_ENV
           echo "OUT_DIR=$OUT_DIR" >> $GITHUB_ENV
+          echo "PKG_OUT_DIR=$PKG_OUT_DIR" >> $GITHUB_ENV
 
       - name: Mark firmware build failed
         if: false # steps.install.outcome == 'failure' || steps.compile.outcome == 'failure'
@@ -721,6 +723,14 @@ jobs:
         with:
           name: logs-${{ matrix.target }}-${{ needs.check.outputs.fw_date }}
           path: logs-*.tar.xz
+
+      - name: Upload packages OUT directory
+        uses: actions/upload-artifact@main
+        if: steps.install.outputs.status == 'success' && env.RETAIN_PKG == 'true'
+        with:
+          name: openwrt-packages-${{ env.BLD_VER }}-${{ needs.check.outputs.build_date }}
+          path: ${{ env.PKG_OUT_DIR }}
+          if-no-files-found: error
 
   release:
     needs: [ check, build ]
