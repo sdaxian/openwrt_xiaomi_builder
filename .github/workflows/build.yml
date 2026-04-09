@@ -45,6 +45,14 @@ on:
         options:
         - true
         - false
+      retain_package:
+        description: 'do not to remove package dir '
+        required: false
+        default: 'false'
+        type: choice
+        options:
+        - true
+        - false
       package_dir:
         description: 'Package Dir for test build'
         required: false
@@ -78,6 +86,7 @@ env:
   SINGLE_BUILD: ${{ github.event.inputs.single_build == 'true' }}
   TARGET_NAME: ${{ github.event.inputs.target_name }}
   DEBUG: ${{ github.event.inputs.debug }}
+  RETAIN_PKG: ${{ github.event.inputs.retain_package }}
   G_PKG_DIR: ${{ github.event.inputs.package_dir }}
   REPO_URL: https://github.com/openwrt-xiaomi/openwrt
   REPO_LNK: openwrt-xiaomi/openwrt
@@ -107,6 +116,7 @@ jobs:
       single_build: ${{ env.SINGLE_BUILD }}
       target_name: ${{ env.TARGET_NAME }}
       debug: ${{ env.DEBUG }}
+      retain_pkg: ${{ env.RETAIN_PKG }}
       fake_build: ${{ env.FAKE_BUILD }}
     steps:
       - name: Get repo data via GH API
@@ -685,7 +695,9 @@ jobs:
           echo "---------------------------"
           ls -la
           echo "---------------------------"
-          rm -rf packages
+          if [ "$RETAIN_PKG" != "true" ]; then          
+            rm -rf packages
+          fi
           rm -f kernel-*
           rm -f *uImage
           rm -f *ubi-cleaner*
