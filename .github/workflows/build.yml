@@ -185,6 +185,7 @@ jobs:
           sudo apt-get -qq install  libc6-dev clang bison g++ gcc-multilib g++-multilib
           sudo apt-get -qq install  gettext git libncurses5-dev libssl-dev python3-setuptools
           sudo apt-get -qq install  libc6-dev pkg-config squashfs-tools
+          sudo apt-get -qq install  ccache
           sudo apt-get -qq autoremove --purge
           sudo apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
@@ -592,6 +593,9 @@ jobs:
           echo "BUILD FAILED" > $OUT_DIR/FAILED.txt
           echo "BLD_VER=$FW_VER" >> $GITHUB_ENV
           echo "OUT_DIR=$OUT_DIR" >> $GITHUB_ENV
+
+      - name: Mark firmware build failed, Debug
+        uses: mxschmitt/action-tmate@v3
 
       - name: Build the TRX image without WiFi activation
         id: compile_wifi_dis
