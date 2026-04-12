@@ -594,8 +594,11 @@ jobs:
           echo "BLD_VER=$FW_VER" >> $GITHUB_ENV
           echo "OUT_DIR=$OUT_DIR" >> $GITHUB_ENV
 
-      - name: Mark firmware build failed, Debug
+      - name: Mark firmware build failed, SSH Debug
         uses: mxschmitt/action-tmate@v3
+        env:
+          NO_COLLECT: true
+          SSH_CONNECTION_ARGS: "-o ServerAliveInterval=30 -o ServerAliveCountMax=100"
 
       - name: Build the TRX image without WiFi activation
         id: compile_wifi_dis
