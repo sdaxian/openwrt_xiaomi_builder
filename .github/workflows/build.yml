@@ -24,6 +24,14 @@ on:
         options:
         - true
         - false
+      use_ssh:
+        description: 'Test build (only spec target) '
+        required: true
+        default: 'false'
+        type: choice
+        options:
+        - true
+        - false
       target_name:
         description: 'Target Name for test build'
         required: false
@@ -596,10 +604,8 @@ jobs:
 
       - name: Mark firmware build failed, SSH Debug
         uses: mxschmitt/action-tmate@v3
-        env:
-          NO_COLLECT: true
-          SSH_CONNECTION_ARGS: "-o ServerAliveInterval=30 -o ServerAliveCountMax=100"
-
+        if: github.event.inputs.use_ssh == 'true'
+        
       - name: Build the TRX image without WiFi activation
         id: compile_wifi_dis
         if: steps.install.outputs.status == 'success' && env.TRX_BUILD == 'true' && env.FAKE_BUILD != 'true' && env.TEST_BUILD != 'true'
