@@ -25,7 +25,7 @@ on:
         - true
         - false
       use_ssh:
-        description: 'Test build (only spec target) '
+        description: 'Use ssh '
         required: true
         default: 'false'
         type: choice
