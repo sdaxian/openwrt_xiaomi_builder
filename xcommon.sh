@@ -56,13 +56,6 @@ get_cfg_feed_url() {
 	echo "$k"
 }
 
-get_cfg_feed_allow_lst() {
-	local cfg=$1
-	local name=$2
-	local k=$( grep -o -P '(?<=^GIT_FEED_ALLOW_$name=).*' "$cfg" 2> /dev/null )
-	echo "$k"
-}
-
 get_cfg_expkg_lst() {
 	local cfg=$1
 	local k=$( grep -o -P '(?<=^#GIT_PACKAGE ).*(?==)' "$cfg" 2> /dev/null )
