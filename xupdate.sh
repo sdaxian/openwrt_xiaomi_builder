@@ -128,6 +128,17 @@ fi
 
 if [ "$OPT_FULL_UPDATE" = "true" ]; then
 	./scripts/feeds update -a
+	
+	feed_lst=$( get_cfg_feed_lst "$ADDONSCFG" )
+	for feed in $feed_lst; do
+		feed_allow_lst=$( get_cfg_feed_allow_lst "$ADDONSCFG" $feed )
+		#echo "$feed = '$feed_allow_lst'"
+		for feed_allow in feed_allow_lst; do
+		    echo "allow $feed $feed_allow" >> ./feeds/$feed/feed.conf
+	    done
+	done
+
+	
 	./scripts/feeds install -a
 fi
 
