@@ -286,6 +286,14 @@ jobs:
           ./xupdate.sh -f
           mkdir -p logs
           echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: Update OpenWrt packages Patch
+        id: update_patch
+        run: |
+          # kwrt 包有些有问题无法完全编译，因此用 -d n 方式安装
+          rm -rf feeds/_kwrt_op_packages
+          ./scripts/feeds install -a -p _kwrt_op_packages -d n
+          echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Configure
         id: configure
