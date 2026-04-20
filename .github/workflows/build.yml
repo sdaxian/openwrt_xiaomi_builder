@@ -290,11 +290,16 @@ jobs:
       - name: Update OpenWrt packages Patch
         id: update_patch
         run: |
-          # kwrt 包有些有问题无法完全编译，因此用 -d n 方式安装
-          rm -rf package/feeds/_kwrt_op_packages
-          ./scripts/feeds install -a -p _kwrt_op_packages -d n
-          ls package/feeds/_kwrt_op_packages/
-          echo "status=success" >> $GITHUB_OUTPUT
+          # kwrt 包有些有问题无法完全编译，因此去掉这些编译失败或者冲突的
+          rm -rf package/feeds/_kwrt_op_packages/rtl8189es
+          rm -rf package/feeds/_kwrt_op_packages/fast-classifier
+          rm -rf package/feeds/_kwrt_op_packages/fibocom_QMI_WWAN
+          rm -rf package/feeds/_kwrt_op_packages/simcom_QMI_WWAN
+          rm -rf package/feeds/_kwrt_op_packages/shortcut-fe
+          rm -rf package/feeds/_kwrt_op_packages/rkp-ipid
+          rm -rf package/feeds/_kwrt_op_packages/quectel_MHI
+          rm -rf  package/feeds/_kwrt_op_packages/luci-app-cpufreq
+          # echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Configure
         id: configure
