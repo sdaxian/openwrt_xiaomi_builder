@@ -536,6 +536,10 @@ jobs:
           cat disabled_services.lst || echo '<<< file disabled_services.lst not found >>>'
           echo "::endgroup::"
 
+      - name: 》》》 Mark firmware build failed, SSH Debug
+        uses: mxschmitt/action-tmate@v3
+        if: github.event.inputs.use_ssh == 'true'
+
       - name: Kernel compile
         id: kernel
         if: ${{ steps.tools.outputs.status == 'success' && env.FAKE_BUILD != 'true' }}
@@ -552,10 +556,6 @@ jobs:
           echo
           echo "Available storage:"
           sudo df -h
-
-      - name: 》》》 Mark firmware build failed, SSH Debug
-        uses: mxschmitt/action-tmate@v3
-        if: github.event.inputs.use_ssh == 'true'
 
       - name: Build the firmware image
         id: compile
