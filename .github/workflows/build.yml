@@ -299,6 +299,10 @@ jobs:
           rm -rf package/feeds/_kwrt_op_packages/rkp-ipid
           rm -rf package/feeds/_kwrt_op_packages/quectel_MHI
           rm -rf  package/feeds/_kwrt_op_packages/luci-app-cpufreq
+
+          rm -rf package/feeds/_xwrt_packages/cups
+          rm -rf package/feeds/_xwrt_packages/cups-bjnp
+          
           # echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Configure
