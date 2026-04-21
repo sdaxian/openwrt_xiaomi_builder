@@ -344,6 +344,10 @@ jobs:
           cp -f .config logs/config1
           cp -f .config config1
 
+      - name: 》》》 Mark firmware build failed, SSH Debug
+        uses: mxschmitt/action-tmate@v3
+        if: github.event.inputs.use_ssh == 'true'
+
       - name: Prepare for host tools
         id: tools_prepare
         env: 
