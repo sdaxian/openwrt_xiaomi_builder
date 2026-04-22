@@ -40,6 +40,7 @@ on:
         options:
         - true
         - false
+        - only_fail
       target_name:
         description: 'Target Name for test build'
         required: false
@@ -540,10 +541,6 @@ jobs:
           cat disabled_services.lst || echo '<<< file disabled_services.lst not found >>>'
           echo "::endgroup::"
 
-      - name: 》》》 Mark firmware build failed, SSH Debug
-        uses: mxschmitt/action-tmate@v3
-        if: github.event.inputs.use_ssh == 'true'
-
       - name: Kernel compile
         id: kernel
         if: ${{ steps.tools.outputs.status == 'success' && env.FAKE_BUILD != 'true' }}
@@ -582,6 +579,10 @@ jobs:
               fi
           fi
           echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: Mark firmware build failed, SSH Debug
+        uses: mxschmitt/action-tmate@v3
+        if: (github.event.inputs.use_ssh == 'true') || (failure() && (github.event.inputs.use_ssh == 'only_fail'))
           
       - name: Process out results
         id: install
@@ -645,10 +646,6 @@ jobs:
           echo "BLD_VER=$FW_VER" >> $GITHUB_ENV
           echo "OUT_DIR=$OUT_DIR" >> $GITHUB_ENV
 
-      - name: Mark firmware build failed, SSH Debug
-        uses: mxschmitt/action-tmate@v3
-        if: github.event.inputs.use_ssh == 'true'
-        
       - name: Build the TRX image without WiFi activation
         id: compile_wifi_dis
         if: steps.install.outputs.status == 'success' && env.TRX_BUILD == 'true' && env.FAKE_BUILD != 'true' && env.TEST_BUILD != 'true'
