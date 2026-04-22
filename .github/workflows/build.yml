@@ -558,6 +558,16 @@ jobs:
           echo "Available storage:"
           sudo df -h
 
+      - name: Build avahi-dbus-daemon and cups package
+        id: compile_cups_package
+        if: steps.tools.outputs.status == 'success'
+        env: 
+          TARGET: ${{ matrix.target }}
+        run: |
+          make package/avahi-dbus-daemon/compile
+          make package/cups/compile
+          make package/luci-app-cupsd/compile
+
       - name: Build the firmware image
         id: compile
         if: steps.tools.outputs.status == 'success'
