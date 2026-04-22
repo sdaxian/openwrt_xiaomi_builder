@@ -214,8 +214,8 @@ jobs:
           sudo apt-get -qq install  gettext git libncurses5-dev libssl-dev python3-setuptools
           sudo apt-get -qq install  libc6-dev pkg-config squashfs-tools
           sudo apt-get -qq install  ccache 
-          sudo apt-get -qq libncurses-dev xsltproc llvm python3-pyelftools libpython3-dev aria2 jq 
-          sudo apt-get -qq qemu-utils rename libelf-dev libgmp3-dev libmpc-dev libfuse-dev bc autopoint upx
+          sudo apt-get -qq install  libncurses-dev xsltproc llvm python3-pyelftools libpython3-dev aria2 jq 
+          sudo apt-get -qq install qemu-utils rename libelf-dev libgmp3-dev libmpc-dev libfuse-dev bc autopoint upx
           sudo apt-get -qq autoremove --purge
           sudo apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
