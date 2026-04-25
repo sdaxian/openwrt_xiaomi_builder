@@ -592,6 +592,50 @@ jobs:
           fi
           echo "status=success" >> $GITHUB_OUTPUT
 
+      - name: Build the firmware image retry 1
+        id: compile_retry_1
+        if: failure() && steps.tools.outputs.status == 'success'
+        env: 
+          TARGET: ${{ matrix.target }}
+        run: |
+          echo "Run $(nproc) thread compile"
+          if [ "$FAKE_BUILD" != "true" -a "$TEST_BUILD" = "true" -a "$G_PKG_DIR" != "" ]; then
+              make target/linux/compile -j$(npoc)
+              echo "=============== BUILD PACKAGE: $G_PKG_DIR ==============="
+              make $G_PKG_DIR/compile V=sc BUILD_LOG=1
+              exit 99
+          fi
+          if [ "$FAKE_BUILD" != "true" ]; then
+              if [ "$TEST_BUILD" != "true" ]; then
+                  make -j$(nproc) world
+              else
+                  make V=sc world
+              fi
+          fi
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: Build the firmware image retry 2
+        id: compile_retry_2
+        if: failure() && steps.tools.outputs.status == 'success'
+        env: 
+          TARGET: ${{ matrix.target }}
+        run: |
+          echo "Run $(nproc) thread compile"
+          if [ "$FAKE_BUILD" != "true" -a "$TEST_BUILD" = "true" -a "$G_PKG_DIR" != "" ]; then
+              make target/linux/compile -j$(npoc)
+              echo "=============== BUILD PACKAGE: $G_PKG_DIR ==============="
+              make $G_PKG_DIR/compile V=sc BUILD_LOG=1
+              exit 99
+          fi
+          if [ "$FAKE_BUILD" != "true" ]; then
+              if [ "$TEST_BUILD" != "true" ]; then
+                  make -j$(nproc) world
+              else
+                  make V=sc world
+              fi
+          fi
+          echo "status=success" >> $GITHUB_OUTPUT
+
       - name: Mark firmware build failed, SSH Debug
         uses: mxschmitt/action-tmate@v3
         if: (github.event.inputs.use_ssh == 'true') || (failure() && (github.event.inputs.use_ssh == 'only_fail'))
