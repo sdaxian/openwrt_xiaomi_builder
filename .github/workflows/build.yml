@@ -359,7 +359,7 @@ jobs:
           echo "FILE_DATE=$FILE_DATE" >> $GITHUB_ENV
 
       - name: OpenWrt Build Cache Restore
-        if: ${{ inputs.enable_build_cache == true }}
+        if: ${{ github.event.inputs.enable_build_cache == 'true' }}
         id: build-cache-restore
         uses: actions/cache/restore@v4
         with:
@@ -663,7 +663,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: OpenWrt Build Cache Save
-        if: ${{ inputs.enable_build_cache && always() }}
+        if: ${{ (github.event.inputs.enable_build_cache == 'true') && always() }}
         uses: actions/cache/save@v4
         with:
           path: |
