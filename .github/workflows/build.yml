@@ -365,7 +365,6 @@ jobs:
         with:
           path: |
             dl
-            build_dir
             staging_dir
           key: openwrt-${{ runner.os }}-${{ hashFiles('.config', 'feeds.conf.default') }}
           restore-keys: |
@@ -662,13 +661,24 @@ jobs:
           fi
           echo "status=success" >> $GITHUB_OUTPUT
 
+      - name: Build the firmware image retry 3
+        id: compile_retry_3
+        if: failure() && steps.tools.outputs.status == 'success'
+        env: 
+          TARGET: ${{ matrix.target }}
+        run: |
+          echo "Run $(nproc) thread compile"
+          if [ "$FAKE_BUILD" != "true" ]; then
+              make j1 V=sc package/install
+          fi
+          
+
       - name: OpenWrt Build Cache Save
         if: ${{ (github.event.inputs.enable_build_cache == 'true') && always() }}
         uses: actions/cache/save@v4
         with:
           path: |
             dl
-            build_dir
             staging_dir
           key: ${{ steps.build-cache-restore.outputs.cache-primary-key }}      
 
