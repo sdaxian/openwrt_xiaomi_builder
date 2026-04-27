@@ -307,6 +307,11 @@ jobs:
           rm -rf feeds/packages/libs/libcups
           rm -rf package/feeds/_xwrt_packages/cups
           rm -rf package/feeds/_xwrt_packages/cups-bjnp
+
+          # patch package/firmware/ipq-wifi/Makefile 回退都老版本
+          sed -i 's/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2025-10-22/' package/firmware/ipq-wifi/Makefile
+          sed -i 's/^PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=ec6831a43ff066c9873e7c41fd6f68354bb67b4a/' package/firmware/ipq-wifi/Makefile
+          sed -i 's/^PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=33a26f90fd450e9dc2b2d5ae9c137ffcd57ef62dac277d63c5d5f6f5a1262a2f/' package/firmware/ipq-wifi/Makefile
           
           # echo "status=success" >> $GITHUB_OUTPUT
           
