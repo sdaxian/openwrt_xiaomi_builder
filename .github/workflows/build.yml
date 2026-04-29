@@ -315,6 +315,8 @@ jobs:
           rm -rf package/feeds/_xwrt_packages/cups
           rm -rf package/feeds/_xwrt_packages/cups-bjnp
 
+          # for kwrt natflow
+          rm -rf package/feeds/_xwrt_packages/natflow
           
           # echo "status=success" >> $GITHUB_OUTPUT
           
