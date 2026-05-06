@@ -593,7 +593,7 @@ jobs:
         env: 
           TARGET: ${{ matrix.target }}
         run: |
-          make package/cups/host/compile
+          make package/cups/host/compile V=s
           make package/luci-app-cupsd/compile
  
 
