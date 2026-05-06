@@ -308,12 +308,15 @@ jobs:
           rm -rf package/feeds/_kwrt_op_packages/shortcut-fe
           rm -rf package/feeds/_kwrt_op_packages/rkp-ipid
           rm -rf package/feeds/_kwrt_op_packages/quectel_MHI
-          rm -rf  package/feeds/_kwrt_op_packages/luci-app-cpufreq
+          rm -rf package/feeds/_kwrt_op_packages/luci-app-cpufreq
 
           # for kwrt cups
           rm -rf feeds/packages/libs/libcups
           rm -rf package/feeds/_xwrt_packages/cups
           rm -rf package/feeds/_xwrt_packages/cups-bjnp
+          
+          # for openwrt-printing-packages cups
+          rm -rf package/feeds/_openwrt-printing-packages/cups
 
           # for kwrt natflow
           rm -rf package/feeds/_xwrt_packages/natflow
