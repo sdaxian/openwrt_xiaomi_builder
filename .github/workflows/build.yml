@@ -225,9 +225,8 @@ jobs:
           sudo apt-get -qq install  ccache 
           sudo apt-get -qq install  libncurses-dev xsltproc llvm python3-pyelftools libpython3-dev aria2 jq 
           sudo apt-get -qq install  qemu-utils rename libelf-dev libgmp3-dev libmpc-dev libfuse-dev bc autopoint upx
-          sudo apt-get -qq install zlib1g-dev libpng-dev libjpeg-dev libtiff-dev libfreetype6-dev liblcms2-dev libfontconfig-dev
-          sudo apt-get -qq install build-essential libtool autoconf automake pkg-config zlib1g-dev libpng-dev libjpeg-dev libtiff-dev libfreetype6-dev liblcms2-dev libfontconfig-dev libcups2-dev
-          sudo apt-get -qq install zlib1g-dev libpng-dev libjpeg-dev libtiff-dev libfreetype6-dev liblcms2-dev libopenjp2-7-dev libfontconfig-dev libcups2-dev cups 
+          sudo apt-get -qq install libpng-dev libjpeg-dev libtiff-dev libfreetype6-dev liblcms2-dev libfontconfig-dev
+          sudo apt-get -qq install libtool autoconf automake libopenjp2-7-dev libcups2-dev cups 
           sudo apt-get -qq autoremove --purge
           sudo apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
@@ -314,14 +313,24 @@ jobs:
           rm -rf package/feeds/_kwrt_op_packages/quectel_MHI
           rm -rf package/feeds/_kwrt_op_packages/luci-app-cpufreq
 
-          # for kwrt cups
+          # for xwrt cups use _openwrt_printing_packages_belphegor_belbel
           rm -rf package/feeds/_xwrt_packages/cups
           rm -rf package/feeds/_xwrt_packages/cups-bjnp
-          
-          # for openwrt-printing-packages cups
-          rm -rf package/feeds/_openwrt-printing-packages/cups
 
-          # for kwrt natflow
+          # for kwrt cups use _openwrt_printing_packages_belphegor_belbel
+          rm -rf package/feeds/_kwrt_op_packages/cups
+          rm -rf package/feeds/_kwrt_op_packages/cups-bjnp
+          
+          # for openwrt-printing-packages cups use _openwrt_printing_packages_belphegor_belbel
+          rm -rf package/feeds/_openwrt_printing_packages_master_0123/cups
+          rm -rf package/feeds/_openwrt_printing_packages_master_0123/avahi
+          rm -rf package/feeds/_openwrt_printing_packages_master_0123/ghostscript
+          rm -rf package/feeds/_openwrt_printing_packages_master_0123/ghostscript-fonts-std
+          rm -rf package/feeds/_openwrt_printing_packages_master_0123/openprinting-cups-filters
+          rm -rf package/feeds/_openwrt_printing_packages_master_0123/qpdf
+          rm -rf package/feeds/_openwrt_printing_packages_master_0123/poppler
+          
+          # for xwrt natflow use kwrt
           rm -rf package/feeds/_xwrt_packages/natflow
           
           # echo "status=success" >> $GITHUB_OUTPUT
@@ -596,6 +605,8 @@ jobs:
         env: 
           TARGET: ${{ matrix.target }}
         run: |
+          make package/ghostscript/compile
+          make package/openprinting-cups-filters/compile
           make package/luci-app-cupsd/compile
  
 
