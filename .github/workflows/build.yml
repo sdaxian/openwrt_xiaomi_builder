@@ -215,6 +215,7 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
+          sudo add-apt-repository universe
           sudo apt-get -qq update
           #sudo apt-get -qq update && sudo apt-get -qq upgrade
           sudo apt-get -qq install  build-essential gawk flex rsync swig unzip zlib1g-dev file wget
