@@ -224,6 +224,8 @@ jobs:
           sudo apt-get -qq install  ccache 
           sudo apt-get -qq install  libncurses-dev xsltproc llvm python3-pyelftools libpython3-dev aria2 jq 
           sudo apt-get -qq install  qemu-utils rename libelf-dev libgmp3-dev libmpc-dev libfuse-dev bc autopoint upx
+          sudo apt-get -qq install zlib1g-dev libpng-dev libjpeg-dev libtiff-dev libfreetype6-dev liblcms2-dev libopenjpeg-dev libfontconfig-dev
+          sudo apt-get -qq install build-essential libtool autoconf automake pkg-config zlib1g-dev libpng-dev libjpeg-dev libtiff-dev libfreetype6-dev liblcms2-dev libopenjpeg-dev libfontconfig-dev libcups-dev
           sudo apt-get -qq autoremove --purge
           sudo apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
