@@ -321,14 +321,18 @@ jobs:
           rm -rf package/feeds/_kwrt_op_packages/cups
           rm -rf package/feeds/_kwrt_op_packages/cups-bjnp
           
-          # for openwrt-printing-packages cups use _openwrt_printing_packages_belphegor_belbel
+          # for _openwrt_printing_packages_belphegor_belbel cups use _openwrt_printing_packages_master_0123 openprinting-cups-filters qpdf poppler
+          rm -rf package/feeds/_openwrt_printing_packages_belphegor_belbel/qpdf
+          rm -rf package/feeds/_openwrt_printing_packages_belphegor_belbel/openprinting-cups-filters
+          rm -rf package/feeds/_openwrt_printing_packages_belphegor_belbel/poppler
+          ./scripts/feeds install -a -p _openwrt_printing_packages_master_0123
+          
+          # for _openwrt_printing_packages_master_0123 cups use _openwrt_printing_packages_belphegor_belbel
           rm -rf package/feeds/_openwrt_printing_packages_master_0123/cups
           rm -rf package/feeds/_openwrt_printing_packages_master_0123/avahi
           rm -rf package/feeds/_openwrt_printing_packages_master_0123/ghostscript
           rm -rf package/feeds/_openwrt_printing_packages_master_0123/ghostscript-fonts-std
-          rm -rf package/feeds/_openwrt_printing_packages_master_0123/openprinting-cups-filters
-          rm -rf package/feeds/_openwrt_printing_packages_master_0123/qpdf
-          rm -rf package/feeds/_openwrt_printing_packages_master_0123/poppler
+
           
           # for xwrt natflow use kwrt
           rm -rf package/feeds/_xwrt_packages/natflow
