@@ -680,16 +680,6 @@ jobs:
           fi
           echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: Build the firmware image retry 3
-        id: compile_retry_3
-        if: failure() && steps.tools.outputs.status == 'success'
-        env: 
-          TARGET: ${{ matrix.target }}
-        run: |
-          echo "Run $(nproc) thread compile"
-          if [ "$FAKE_BUILD" != "true" ]; then
-              make -j1 V=sc package/install
-          fi
           
 
       - name: OpenWrt Build Cache Save
