@@ -374,18 +374,6 @@ jobs:
           echo "G_TARGET_ARCH=$G_TARGET_ARCH" >> $GITHUB_ENV
           echo "FILE_DATE=$FILE_DATE" >> $GITHUB_ENV
 
-      - name: OpenWrt Build Cache Restore
-        if: ${{ github.event.inputs.enable_build_cache == 'true' }}
-        id: build-cache-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            dl
-            staging_dir
-          key: openwrt-${{ runner.os }}-${{ hashFiles('.config', 'feeds.conf.default') }}
-          restore-keys: |
-            openwrt-${{ runner.os }}-
-
       - name: Dump .config file
         run: |
           echo "====== .config ========="
@@ -549,7 +537,22 @@ jobs:
         id: tools
         if: ${{ steps.configure.outputs.status == 'success' && env.FAKE_BUILD != 'true' }}
         run: |
+          echo '---- du -sh * | sort -hr --------------'
+          du -sh * | sort -hr
+          echo '---- du -sh build_dir/* | sort -hr --------------'
+          du -sh build_dir/* | sort -hr
+          echo '---- du -sh staging_dir/* | sort -hr --------------'
+          du -sh staging_dir/* | sort -hr
+
           make toolchain/install -j$(nproc)
+
+          echo '---- du -sh * | sort -hr --------------'
+          du -sh * | sort -hr
+          echo '---- du -sh build_dir/* | sort -hr --------------'
+          du -sh build_dir/* | sort -hr
+          echo '---- du -sh staging_dir/* | sort -hr --------------'
+          du -sh staging_dir/* | sort -hr
+
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Save cache for host tools
@@ -569,6 +572,31 @@ jobs:
               ls -la staging_dir/host/stamp/ > logs/host_stamp_dir.txt
           fi
 
+      - name: Build package/llvm/compile
+        id: llvm_compile
+        if: steps.tools.outputs.status == 'success'
+        run: |
+          make package/llvm/compile -j$(nproc)
+
+          echo '---- du -sh * | sort -hr --------------'
+          du -sh * | sort -hr
+          echo '---- du -sh build_dir/* | sort -hr --------------'
+          du -sh build_dir/* | sort -hr
+          echo '---- du -sh staging_dir/* | sort -hr --------------'
+          du -sh staging_dir/* | sort -hr
+
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: Save cache for host tools
+        id: llvm_compile_tools_cache_save
+        if: steps.llvm_compile.outputs.status == 'success'
+        uses: actions/cache/save@v4
+        with:
+          key: host-tools-${{ env.CACHE_VER }}-${{ env.TOOLS_SRC_CRC }}-${{ env.TOOLS_PREREQ_CRC }}-${{ env.TOOLS_COMPILE_CRC }}
+          path: |
+            staging_dir/host
+            build_dir/host
+            
       - name: Configure 2
         id: configure2
         if: steps.tools.outputs.status == 'success'
@@ -679,17 +707,6 @@ jobs:
               fi
           fi
           echo "status=success" >> $GITHUB_OUTPUT
-
-          
-
-      - name: OpenWrt Build Cache Save
-        if: ${{ (github.event.inputs.enable_build_cache == 'true') && always() }}
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            dl
-            staging_dir
-          key: ${{ steps.build-cache-restore.outputs.cache-primary-key }}      
 
       - name: Mark firmware build failed, SSH Debug
         uses: mxschmitt/action-tmate@v3
